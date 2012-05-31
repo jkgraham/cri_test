@@ -1,0 +1,209 @@
+:plain
+  <!-- VIEWS: views\partials\_single_order.html.haml -->
+- order = locals[:order]
+.span-24{:style => 'page-break-before: always;'}
+  %h2
+    = "Order number: #{order.id}"
+.span-24
+  %table.manual_import
+    %tr
+      %td
+        %p
+          Shipping Option:
+        %table
+          - if order.shipping_type
+            %tr
+              %th
+                = order.shipping_type.name
+              %td
+                - if order.shipping_cost && order.shipping_cost.to_i > 0
+                  = number_to_currency order.shipping_cost.to_i
+                - else
+                  The shipping cost was not specified
+          - else
+            No shipping option was specified.
+
+      %td
+        %p
+          Financing Option:
+        %table
+          - if order.payment_terms && order.payment_terms.length > 0
+            - order.payment_terms.each do |payment_term|
+              %tr
+                %th
+                  = payment_term.product_names.to_sentence
+                %td
+                  = payment_term.description
+          - else
+            %tr
+              %td
+                No financing terms were selected
+
+    %tr
+      %td
+        %p
+          Billing Information:
+        %table
+          %tr
+            %th
+              Billing First Name:
+            %td
+              = order.billing_first_name
+          %tr
+            %th
+              Billing Middle Initial:
+            %td
+              = order.billing_middle_initial
+          %tr
+            %th
+              Billing Last Name:
+            %td
+              = order.billing_last_name
+          %tr
+            %th
+              Billing Address Line 1:
+            %td
+              = order.billing_address_line_1
+          %tr
+            %th
+              Billing Address Line 2:
+            %td
+              = order.billing_address_line_2
+          %tr
+            %th
+              Billing City:
+            %td
+              = order.billing_city
+          %tr
+            %th
+              Billing State:
+            %td
+              = order.billing_state
+          %tr
+            %th
+              Billing Postal Code:
+            %td
+              = order.billing_postal_code
+          %tr
+            %th
+              Billing Country
+            %td
+              = order.billing_country
+          %tr
+            %th
+              Credit Card Number
+            %td
+              = order.credit_card_number if order.credit_card_number
+          %tr
+            %th
+              Credit Card Expiration Date
+            %td
+              = order.credit_card_expiry if order.credit_card_expiry
+          %tr
+            %th
+              Credit Card Authorization Code
+            %td
+              = order.authorization_code if order.authorization_code
+          %tr
+            %th
+              Credit Card Transaction ID
+            %td
+              = order.transaction_id if order.transaction_id
+      %td
+        %p
+          Shipping Information:
+        %table
+          %tr
+            %th
+              Shipping First Name:
+            %td
+              = order.shipping_first_name
+          %tr
+            %th
+              Shipping Middle Initial:
+            %td
+              = order.shipping_middle_initial
+          %tr
+            %th
+              Shipping Last Name:
+            %td
+              = order.shipping_last_name
+          %tr
+            %th
+              Shipping Address Line 1:
+            %td
+              = order.shipping_address_line_1
+          %tr
+            %th
+              Shipping Address Line 2:
+            %td
+              = order.shipping_address_line_2
+          %tr
+            %th
+              Shipping City:
+            %td
+              = order.shipping_city
+          %tr
+            %th
+              Shipping State:
+            %td
+              = order.shipping_state
+          %tr
+            %th
+              Shipping Postal Code:
+            %td
+              = order.shipping_postal_code
+          %tr
+            %th
+              Shipping Country
+            %td
+              = order.shipping_country
+    %tr
+      %td
+        %p
+          Customer Identification:
+        %table
+          %tr
+            %th
+              Customer Number:
+            %td
+              = order.contact.customer_number
+          %tr
+            %th
+              Email Address:
+            %td
+              = order.contact.email_address
+
+        - if order.order_tracking_urls.length > 0
+          %p
+            Tracking URLs:
+          %table
+            - order.order_tracking_urls.each do |tracking_url|
+              %tr
+                %th
+                  = tracking_url.tracking_url_string
+
+        - if order.order_tracking_codes.length > 0
+          %p
+            Tracking Codes:
+          %table
+            - order.order_tracking_codes.each do |tracking_code|
+              %tr
+                %th
+                  = tracking_code.code
+    
+      %td
+        %p
+          Ordered Products:
+        %table
+          - order.order_products.each do |order_product|
+            %tr
+              %th
+                = order_product.product_code
+              %td
+                = number_to_currency order_product.displayed_price.to_i
+            - order_product.order_product_option_choices.each do |option_choice|
+              %tr
+                %td
+                  = " - #{option_choice.option.display_name}: #{option_choice.option_choice_web_title}"
+
