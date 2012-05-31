@@ -1,4 +1,4 @@
-cri_test
+critest
 ========
 
 testing of git merges
